@@ -8,7 +8,7 @@ Laravel is a free, open-source PHP web framework, created by Taylor Otwell and i
 
 <ol>
     <li><code>git clone https://github.com/Kimheang-Developer/blog_project.git</code></li>
-    <li><code>cd lara_cms_project</code></li>
+    <li><code>cd blog_project</code></li>
     <li><code>composer update</code></li>
     <li><code>composer install</code></li>
     <li><code>cp .env.example .env</code></li>
