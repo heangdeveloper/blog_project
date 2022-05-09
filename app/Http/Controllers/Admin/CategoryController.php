@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Response;
 
 class CategoryController extends Controller
 {
@@ -14,6 +17,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        if (request()->ajax()) {
+            $category = Category::all();
+            return datatables()->of($category)
+            ->addIndexColumn()
+            ->addColumn('action', function($category) {
+                return '<a class="btn btn-primary btn-xs rounded-0 text-white"><i class="fa fa-edit"></i> Edit</a>' . ' <a class="btn btn-danger btn-xs rounded-0 text-white"><i class="fa fa-trash"></i> Delete</a>';
+            })->make(true);
+        }
+        
         return view('admin.category.index');
     }
 
@@ -35,7 +47,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $slug = Str::slug($request->title, '-');
+        $category = new Category;
+        $category->title = $request->title;
+        $category->slug = $slug;
+        $category->description = $request->description;
+        $category->save();
+
+        return response()->json($category);
     }
 
     /**
