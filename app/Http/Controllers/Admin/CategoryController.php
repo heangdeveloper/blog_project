@@ -22,7 +22,7 @@ class CategoryController extends Controller
             return datatables()->of($category)
             ->addIndexColumn()
             ->addColumn('action', function($category) {
-                return '<a class="btn btn-primary btn-xs rounded-0 text-white"><i class="fa fa-edit"></i> Edit</a>' . ' <a class="btn btn-danger btn-xs rounded-0 text-white"><i class="fa fa-trash"></i> Delete</a>';
+                return '<a class="btn btn-primary btn-xs rounded-0 text-white" onclick="editData('. $category->id .')"><i class="fa fa-edit"></i> Edit</a>' . ' <a class="btn btn-danger btn-xs rounded-0 text-white" onclick="deleteData('. $category->id .')"><i class="fa fa-trash"></i> Delete</a>';
             })->make(true);
         }
         
@@ -76,7 +76,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        return Category::where('id', $id)->first();
     }
 
     /**
@@ -99,6 +99,6 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Category::find($id)->delete();
     }
 }

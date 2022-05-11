@@ -67,6 +67,36 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade" id="edit_category">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" method="" autocomplete="off">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Category</h5>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id" name="edit_id">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control rounded-0" id="edit_title" name="edit_title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control rounded-0" id="edit_description" name="edit_description" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm rounded-0" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -136,10 +166,72 @@
                 },
                 error: function(err) {
                     //console.log(err)
-                    
+                    Swal.fire({
+                        title: 'Oops...!',
+                        text: 'Something went wrong!',
+                        icon: 'error',
+                        timer: '1500'
+                    })
                 }
             })
         })
+
+        // delete category
+        function deleteData(id) {
+            var csrf_token = $('meta[name="csrf-token"]').attr('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "{{ url('admin/category') }}" + '/' + id,
+                        type: 'POST',
+                        data: {
+                                '_method': 'DELETE',
+                                '_token': csrf_token
+                            },
+                        success: function(data) {
+                            table.ajax.reload();
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your data has been deleted!',
+                                icon: 'success',
+                                timer: '1500'
+                            })
+                        },
+                        error: function(err) {
+                            Swal.fire({
+                                title: 'Oops...!',
+                                text: 'Something went wrong!',
+                                icon: 'error',
+                                timer: '1500'
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
+        // edit category
+        function editData(id) {
+            $('#edit_category form')[0].reset();
+            $.ajax({
+                url: "{{ url('admin/category') }}" + "/" + id + "/edit",
+                type: 'GET',
+                success: function(data) {
+                    $('#edit_category').modal('show');
+                    $('#edit_id').val(data.id);
+                    $('#edit_title').val(data.title);
+                    $('#edit_description').val(data.description);
+                }
+            })        
+        }
 
     </script>
 
