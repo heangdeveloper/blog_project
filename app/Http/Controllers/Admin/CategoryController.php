@@ -88,7 +88,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $slug = Str::slug($request->edit_title, '-');
+        $categorie = Category::find($id);
+        $categorie->title = $request->edit_title;
+        $categorie->slug = $slug;
+        $categorie->description = $request->edit_description;
+        $categorie->save();
     }
 
     /**

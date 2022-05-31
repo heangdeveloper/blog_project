@@ -3,7 +3,19 @@
 
 @section('content')
     <div class="content-header">
-
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Category</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard.index') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Category</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 
     <section class="content">
@@ -20,14 +32,17 @@
                                 <div class="form-group">
                                     <label>Name</label>
                                     <input type="text" class="form-control rounded-0" id="title">
+                                    <p class="help-block">The name is how it appears on your site.</p>
                                 </div>
                                 <div class="form-group">
-                                    <label>Slug</label>
+                                    <label>Slug (URL)</label>
                                     <input type="text" class="form-control rounded-0" id="slug">
+                                    <p class="help-block">Will be automatically generated from your name, if left empty.</p>
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
                                     <textarea class="form-control rounded-0" rows="5" id="description"></textarea>
+                                    <p class="help-block">The description is not prominent by default.</p>
                                 </div>
                                 <button type="submit" class="btn btn-success btn-sm rounded-0">Add New Category</button>
                             </form>
@@ -71,26 +86,30 @@
     <div class="modal fade" id="edit_category">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="" method="" autocomplete="off">
+                <form method="POST" autocomplete="off">
+                    {{ csrf_field() }} {{ method_field('POST') }}
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Category</h5>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span>&times;</span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" id="edit_id" name="edit_id">
+                        <input type="hidden" class="form-control" id="edit_id" name="edit_id">
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" class="form-control rounded-0" id="edit_title" name="edit_title">
+                            <p class="help-block">The name is how it appears on your site.</p>
+                            <span id="title_message"></span>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea class="form-control rounded-0" id="edit_description" name="edit_description" rows="5"></textarea>
+                            <textarea class="form-control rounded-0" id="edit_description" rows="5" name="edit_description"></textarea>
+                            <p class="help-block">The description is not prominent by default.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-sm rounded-0" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary btn-sm rounded-0" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary btn-sm rounded-0">Update</button>
                     </div>
                 </form>
@@ -129,9 +148,16 @@
                     data: 'slug'
                 },
                 {
-                    data: 'description',
-                    name: 'description'
-                },
+					data: 'description',
+					name: 'description',
+					render: function(data, type, full, meta) {
+						if (data == null) {
+							return "<span>&#8212;</span>";
+						} else {
+							return data;
+						}		
+					},
+				},
                 {
                     data: 'action',
                     name: 'action',
@@ -221,6 +247,7 @@
         // edit category
         function editData(id) {
             $('#edit_category form')[0].reset();
+            $('input[name=_method]').val('PATCH');
             $.ajax({
                 url: "{{ url('admin/category') }}" + "/" + id + "/edit",
                 type: 'GET',
@@ -232,6 +259,40 @@
                 }
             })        
         }
+
+        // update category
+        $(function() {
+            $('#edit_category form').on('submit', function(e) {
+                if (!e.isDefaultPrevented()) {
+                    var id = $('#edit_id').val();
+                    $.ajax({
+                        url: "{{ url('admin/category') }}" + '/' + id,
+                        type: "POST",
+                        data: $('#edit_category form').serialize(),
+                        success: function(data) {
+                            console.log(data)
+                            $('#edit_category').modal('hide');
+                            table.ajax.reload();
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Success...',
+                                text: 'Data has been add!',
+                                timer: 1500
+                            });
+                        },
+                        error: function(data) {
+                            console.log(data)
+                            swal.fire({
+                                title: 'Oops...',
+                                text: "Something went wrong!",
+                                type: "error"
+                            })
+                        }
+                    });
+                }
+                return false;
+            });
+        });
 
     </script>
 

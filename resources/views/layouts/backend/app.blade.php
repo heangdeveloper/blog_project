@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="{{ asset('backend/css/adminlte.css') }}">
+    <style>
+        form .form-group.required>label:not(:empty):not(.form-check-label):after {
+            color: red;
+            content: " *";
+        }
+        form .help-block {
+            color: #73818f;
+            font-size: .9em;
+            font-style: italic;
+            margin-bottom: 0.25rem;
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
