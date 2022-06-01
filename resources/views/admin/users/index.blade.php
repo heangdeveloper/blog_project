@@ -100,3 +100,59 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+    <script>
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // get user
+        var table = $('#user_table').DataTable({
+            responsive: true,
+            autoWidth: false,
+            ajax: {
+                url: "{{ route('admin.user.index') }}",
+                type: 'GET'
+            },
+            columns: [
+                {
+                    data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false
+                },
+                {
+                    data: 'profile_photo_path',
+                    name: 'profile_photo_path',
+                    render: function(data) {
+                        if (data == 'default.png') {
+                            return "<img src={{ asset('backend/img/default.jpg') }} width='33px' class='rounded-circle'/>";
+                        } else {
+                            return "<img src={{ asset('storage/user/') }}/" + data + " width='33px' class='rounded-circle'/>";
+                        }  
+                    },
+                    orderable: false
+                },
+                {data: 'name', name: 'name'},
+                {data: 'username', name: 'username'},
+                {data: 'email', name: 'email'},
+                {
+                    data: 'role_name',
+                    name: 'role_name',
+                    render: function(data) {
+                        if (data == '["admin"]') {
+                            return '<span class="badge bg-success">Admin</span>';
+                        } else if (data == '["author"]') {
+                            return '<span class="badge bg-info">Author</span>';
+                        } else {
+                            return '<span class="badge bg-danger">Editor</span>';
+                        }
+                    }
+                },
+                {data: 'action', name: 'action', orderable: false, searchable: false}
+            ],
+        })
+
+    </script>
+@endsection

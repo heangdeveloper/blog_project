@@ -25,7 +25,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 col-lg-6">
-                                    <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                                    <form method="POST" action="{{ route('admin.user.store') }}" enctype="multipart/form-data" autocomplete="off">
                                         @csrf
                                         <div class="form-group required">
                                             <label>Username</label>
