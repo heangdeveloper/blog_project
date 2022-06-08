@@ -29,10 +29,11 @@
                         <div class="card-body">
                             <form method="POST" autocomplete="off" id="add_category">
                                 @csrf
-                                <div class="form-group">
+                                <div class="form-group required">
                                     <label>Name</label>
                                     <input type="text" class="form-control rounded-0" id="title">
                                     <p class="help-block">The name is how it appears on your site.</p>
+                                    <span id="title_message"></span>
                                 </div>
                                 <div class="form-group">
                                     <label>Slug (URL)</label>
@@ -192,12 +193,15 @@
                 },
                 error: function(err) {
                     //console.log(err)
-                    Swal.fire({
-                        title: 'Oops...!',
-                        text: 'Something went wrong!',
-                        icon: 'error',
-                        timer: '1500'
-                    })
+                    if (err.status == 422) {
+                        //console.log(err.responseJSON)
+                        $('#title').addClass('is-invalid')
+
+                        $.each(err.responseJSON.errors, function (i, error) {
+                            var el = $(document).find('[id="' + i + '"]')
+                            el.after($('<span class="error invalid-feedback"><strong>' + error[0] + '</strong></span>'))
+                        })
+                    }
                 }
             })
         })
