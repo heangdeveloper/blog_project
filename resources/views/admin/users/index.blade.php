@@ -154,5 +154,46 @@
             ],
         })
 
+        function deleteData(id) {
+            var csrf_token = $('meta[name="csrf-token"]').attr('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: "{{ url('admin/user') }}" + '/' + id,
+                        type: 'POST',
+                        data: {
+                                '_method': 'DELETE',
+                                '_token': csrf_token
+                            },
+                        success: function(data) {
+                            table.ajax.reload();
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Your data has been deleted!',
+                                icon: 'success',
+                                timer: '1500'
+                            })
+                        },
+                        error: function(err) {
+                            Swal.fire({
+                                title: 'Oops...!',
+                                text: 'Something went wrong!',
+                                icon: 'error',
+                                timer: '1500'
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
     </script>
 @endsection

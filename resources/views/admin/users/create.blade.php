@@ -29,19 +29,39 @@
                                         @csrf
                                         <div class="form-group required">
                                             <label>Username</label>
-                                            <input type="text" class="form-control rounded-0" name="username">
+                                            <input type="text" class="form-control rounded-0 @error('username') is-invalid @enderror" name="username">
+                                            @error('username')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group required">
                                             <label>Display Name</label>
-                                            <input type="text" class="form-control rounded-0" name="name">
+                                            <input type="text" class="form-control rounded-0 @error('name') is-invalid @enderror" name="name">
+                                            @error('name')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group required">
                                             <label>Email</label>
-                                            <input type="email" class="form-control rounded-0" name="email">
+                                            <input type="email" class="form-control rounded-0 @error('email') is-invalid @enderror" name="email">
+                                            @error('email')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group required">
                                             <label>Password</label>
-                                            <input type="password" class="form-control rounded-0" name="password">
+                                            <input type="password" class="form-control rounded-0 @error('password') is-invalid @enderror" name="password">
+                                            @error('password')
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                         <div class="form-group">
                                             <label>Role</label>
@@ -54,8 +74,13 @@
                                         <div class="form-group required">
                                             <label>Profile Image</label>
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" name="profile_photo_path">
+                                                <input type="file" class="custom-file-input @error('profile_photo_path') is-invalid @enderror" name="profile_photo_path">
                                                 <label class="custom-file-label rounded-0">Choose Image file</label>
+                                                @error('profile_photo_path')
+                                                    <span class="invalid-feedback">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-success btn-sm rounded-0">Add New User</button>
